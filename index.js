@@ -5,52 +5,69 @@
  * @param {!express:Response} res HTTP response context.
  */
 
-const https = require('https')
+const https = require('https');
 const {Storage} = require('@google-cloud/storage');
 const bucketName = 'teams_webhook';
 
 exports.receiveMessage = (req, res) => {
-    let link = req.body.build_link;
-    let appName = req.body.app_name;
-    let branch = req.body.branch;
-    let build_status = req.body.build_status;
-    let build_id = req.body.build_id;
-    let build_link = req.body.build_link;
+    const storage = new Storage();
+    const bucket = storage.bucket(bucketName);
+    const file = bucket.file('a-cat.gif');
 
-    putACatInBucket();
+    const options = {
+        hostname: 'cataas.com',
+        port: 443,
+        path: '/cat/gif/says/success?color=orange&size=40&type=or',
+        method: 'GET'
+    };
 
+    const catRequest = https.request(options, catResponse => {
+        catResponse.pipe(file.createWriteStream()).on('finish', () => {
+            postToTeams(req.body, res);
+        })
+
+    });
+
+    catRequest.on('error', e => console.log(e));
+
+    catRequest.end();
+};
+
+const postToTeams = (body, res) => {
     const data = JSON.stringify(
         {
             "@type": "MessageCard",
             "@context": "http:\/\/schema.org\/extensions",
             "themeColor": "99334",
-            "summary": `Successful Build ${appName}`,
+            "summary": `Successful Build ${body.app_name}`,
             "sections": [{
-                "activityTitle": `![TestImage](https:\/\/47a92947.ngrok.io\/Content\/Images\/default.png)A new version of ${appName} is available`,
-                "activitySubtitle": req.body.os,
+                "activityTitle": `![TestImage](https:\/\/47a92947.ngrok.io\/Content\/Images\/default.png)A new version of ${body.app_name} is available`,
+                "activitySubtitle": body.os,
                 "activityImage": "https:\/\/cdn1.iconfinder.com\/data\/icons\/interface-elements\/32\/accept-circle-512.png",
                 "facts": [
                     {
                         "name": "built for",
-                        "value": req.body.build_reason
+                        "value": body.build_reason
                     }, {
                         "name": "Build number",
-                        "value": `[${build_id}](${build_link})`
+                        "value": `[${body.build_id}](${body.build_link})`
                     }, {
                         "name": "Start time",
-                        "value": req.body.start_time
+                        "value": body.start_time
                     }, {
                         "name": "Finish Time",
-                        "value": req.body.finish_time
+                        "value": body.finish_time
                     }],
                 "markdown": true
             }, {
                 "heroImage": {
-                    "image": "https:\/\/cataas.com\/cat\/gif\/says\/success?color=orange&size=40&type=or",
+                    "image": "https://storage.googleapis.com/teams_webhook/a-cat.gif",
                     "title": "Success Kitty is happy"
                 }
             }]
-        })
+        });
+
+    console.log(data);
 
     const options = {
         hostname: 'outlook.office.com',
@@ -61,49 +78,18 @@ exports.receiveMessage = (req, res) => {
             'Content-Type': 'application/json',
             'Content-Length': data.length
         }
-    }
+    };
 
     const requestToTeams = https.request(options, responseFromTeams => {
-        console.log(responseFromTeams.statusMessage)
-        res.status(responseFromTeams.statusCode).send(link);
-    })
+        responseFromTeams.on('error', console.log);
+        res.status(responseFromTeams.statusCode).send(body.build_link);
+    });
 
     requestToTeams.on('error', e => {
-        console.log(e)
+        console.log(e);
         res.status(500).send("Error hitting teams")
-    })
+    });
 
     requestToTeams.write(data);
     requestToTeams.end();
-};
-
-const putACatInBucket = (req, res) => {
-    const storage = new Storage();
-    const bucket = storage.bucket(bucketName);
-    const file = bucket.file('a-cat.gif');
-
-    const options = {
-        hostname: 'cataas.com',
-        port: 443,
-        path: '/cat/gif/says/success?color=orange&size=40&type=or',
-        method: 'GET'
-    }
-    https.get(options, res => {
-        const stream = file.createWriteStream({
-            metadata: {
-                contentType: req.file.mimetype
-            },
-            resumable: false
-        });
-
-        stream.on('error', e=> {
-            console.log(e);
-        });
-
-        stream.on('finish', ()=> {
-           file.makePublic().then(()=> {
-               file.getSignedUrl().then(url => console.log(url))
-           })
-        });
-    })
 }
