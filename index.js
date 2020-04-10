@@ -43,7 +43,6 @@ const postToTeams = (body, res) => {
             "sections": [{
                 "activityTitle": `![TestImage](https:\/\/47a92947.ngrok.io\/Content\/Images\/default.png)A new version of ${body.app_name} is available`,
                 "activitySubtitle": body.os,
-                //"activityImage": "https:\/\/cdn1.iconfinder.com\/data\/icons\/interface-elements\/32\/accept-circle-512.png",
                 "activityImage": "https:\/\/storage.googleapis.com\/teams_webhook\/a-cat.gif"
                 "facts": [
                     {
