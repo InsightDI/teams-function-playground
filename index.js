@@ -8,7 +8,6 @@
 const https = require('https')
 const {Storage} = require('@google-cloud/storage');
 const bucketName = 'teams_webhook';
-const fs = require('fs');
 
 exports.receiveMessage = (req, res) => {
     let link = req.body.build_link;
@@ -79,6 +78,10 @@ exports.receiveMessage = (req, res) => {
 };
 
 const putACatInBucket = (req, res) => {
+    const storage = new Storage();
+    const bucket = storage.bucket(bucketName);
+    const file = bucket.file('a-cat.gif');
+
     const options = {
         hostname: 'cataas.com',
         port: 443,
@@ -86,31 +89,21 @@ const putACatInBucket = (req, res) => {
         method: 'GET'
     }
     https.get(options, res => {
-        const filename = './a-cat.gif';
-        console.log(filename)
+        const stream = file.createWriteStream({
+            metadata: {
+                contentType: req.file.mimetype
+            },
+            resumable: false
+        });
 
-        res.pipe(fs.createWriteStream(filename))
-        // Creates a client
-        const storage = new Storage();
+        stream.on('error', e=> {
+            console.log(e);
+        });
 
-        async function uploadFile() {
-            // Uploads a local file to the bucket
-            await storage.bucket(bucketName).upload(filename, {
-                // Support for HTTP requests made with `Accept-Encoding: gzip`
-                gzip: true,
-                // By setting the option `destination`, you can change the name of the
-                // object you are uploading to a bucket.
-                metadata: {
-                    // Enable long-lived HTTP caching headers
-                    // Use only if the contents of the file will never change
-                    // (If the contents will change, use cacheControl: 'no-cache')
-                    cacheControl: 'public, max-age=31536000',
-                },
-            });
-
-            console.log(`${filename} uploaded to ${bucketName}.`);
-        }
-
-        uploadFile().catch(console.error);
+        stream.on('finish', ()=> {
+           file.makePublic().then(()=> {
+               file.getSignedUrl().then(url => console.log(url))
+           })
+        });
     })
 }
