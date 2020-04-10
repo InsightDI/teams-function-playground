@@ -18,10 +18,6 @@ steps:
   args: ['install', '--global', 'gulp-cli']
 - name: 'gcr.io/cloud-builders/npm'
   args: ['install']
-- name: 'gcr.io/cloud-builders/npm'
-  args: ['run', 'build']
-- name: gcr.io/cloud-builders/gsutil
-  args: ['cp', 'dist/function.zip', 'gs://${_BUCKET}/function$COMMIT_SHA.zip']
 - name: gcr.io/cloud-builders/gcloud
   args: ['functions', 'deploy', 'AppCenter_to_Teams_Webhook',  '--runtime=nodejs8', '--trigger-http', '--region=us-central1' ]
 
