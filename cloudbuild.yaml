@@ -20,4 +20,5 @@ steps:
   args: ['install']
 - name: gcr.io/cloud-builders/gcloud
   args: ['functions', 'deploy', 'AppCenter_to_Teams_Webhook_dev', '--region=us-central1', '--allow-unauthenticated', '--runtime=nodejs10', '--trigger-http', '--entry-point=receiveMessage']
-
+- name: gcr.io/cloud-builders/gcloud
+  args: ['functions', 'add-iam-policy-binding', 'AppCenter_to_Teams_Webhook_dev', '--member=allUsers', '--role=roles/cloudfunctions.invoker']
