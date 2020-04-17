@@ -17,7 +17,7 @@ exports.receiveMessage = (req, res) => {
     const options = {
         hostname: 'cataas.com',
         port: 443,
-        path: '/cat/gif/says/success?color=orange&size=40&type=or',
+        path: `/cat/gif/says/success?color=orange&size=40&type=or&rand=${req.body.sent_at}`,
         method: 'GET'
     };
 
@@ -38,32 +38,38 @@ const formatDataForTeams = body => {
             "@type": "MessageCard",
             "@context": "http:\/\/schema.org\/extensions",
             "themeColor": "99334",
-            "summary": `Successful Build ${body.app_name}`,
+            "summary": `${body.app_display_name} has been released`,
             "sections": [{
-                "activityTitle": `![TestImage](https:\/\/47a92947.ngrok.io\/Content\/Images\/default.png)A new version of ${body.app_name} is available`,
-                "activitySubtitle": body.os,
-                "activityImage": "https:\/\/cdn1.iconfinder.com\/data\/icons\/interface-elements\/32\/accept-circle-512.png",
+                "activityTitle": `A new version of ${body.app_name} has been released`,
+                "activitySubtitle": body.platform,
+                "activityImage": "https:\/\/encrypted-tbn0.gstatic.com\/images?q=tbn%3AANd9GcSeAq5IY6N74uXfsFQ6LM8r36xuinm9OHQpf5DawndNVM-h_ZLl&usqp=CAU",
                 "facts": [
                     {
-                        "name": "built for",
-                        "value": body.build_reason
+                        "name": "Release ID",
+                        "value": body.release_id
                     }, {
-                        "name": "Build number",
-                        "value": `[${body.build_id}](${body.build_link})`
+                        "name": "Version",
+                        "value": body.version
                     }, {
-                        "name": "Start time",
-                        "value": body.start_time
+                        "name": "Release Notes",
+                        "value": body.release_notes
                     }, {
-                        "name": "Finish Time",
-                        "value": body.finish_time
+                        "name": "Uploaded at ",
+                        "value": body.uploaded_at
+                    }, {
+                        "name": "Install Link",
+                        "value": `[Download](${body.install_link})`
                     }],
                 "markdown": true
             }, {
-                "heroImage": {
-                    "image": "https://storage.googleapis.com/teams_webhook/a-cat.gif",
-                    "title": "Success Kitty is happy"
-                }
-            }]
+                "images":
+                    [
+                        { "image": `https://storage.googleapis.com/teams_webhook/a-cat.gif?rand=${body.sent_at}`,
+                            "title": "Success Kitty is happy"
+                        }
+                    ]
+            }
+            ]
         });
 };
 
