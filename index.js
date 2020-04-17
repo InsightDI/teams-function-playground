@@ -44,7 +44,7 @@ const formatDataForTeams = body => {
             "sections": [{
                 "activityTitle": `A new version of ${body.app_name} has been released`,
                 "activitySubtitle": body.platform,
-                "activityImage": "https://storage.googleapis.com/teams_webhook/a-cat.gif?rand=${body.sent_at}",
+                "activityImage": `https://storage.googleapis.com/teams_webhook/a-cat.gif?rand=${body.sent_at}`,
                 "facts": [
                     {
                         "name": "Release ID",
