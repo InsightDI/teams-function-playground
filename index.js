@@ -28,6 +28,8 @@ exports.receiveMessage = (req, res) => {
 
     });
 
+    //some dumb change
+    //TODO need to send to teams without the cat this time
     catRequest.on('error', e => console.log(e));
 
     catRequest.end();
