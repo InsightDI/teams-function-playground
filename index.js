@@ -65,7 +65,7 @@ const postToTeams = (body, res) => {
             }, {
                 "images":
                     [
-                        { "image": "https://storage.googleapis.com/teams_webhook/a-cat.gif",
+                        { "image": `https://storage.googleapis.com/teams_webhook/a-cat.gif?rand=${req.body.sent_at}`,
                             "title": "Success Kitty is happy"
                         }
                     ]
