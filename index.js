@@ -17,7 +17,7 @@ exports.receiveMessage = (req, res) => {
     const options = {
         hostname: 'cataas.com',
         port: 443,
-        path: `/cat/gif/says/success?color=orange&size=40&type=or&rand=${req.body.finish_time}`,
+        path: `/cat/gif/says/success?color=orange&size=40&type=or&rand=${req.body.sent_at}`,
         method: 'GET'
     };
 
@@ -59,7 +59,7 @@ const postToTeams = (body, res) => {
                         "value": body.uploaded_at
                     }, {
                         "name": "Install Link",
-                        "value": `[Download](${body.install_link})]`
+                        "value": `[Download](${body.install_link})`
                     }],
                 "markdown": true
             }, {
