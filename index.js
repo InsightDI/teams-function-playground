@@ -43,7 +43,7 @@ const postToTeams = (body, res) => {
             "sections": [{
                 "activityTitle": `A new version of ${body.app_name} has been released`,
                 "activitySubtitle": body.platform,
-                "activityImage": body.icon_link,
+                "activityImage": "https:\/\/encrypted-tbn0.gstatic.com\/images?q=tbn%3AANd9GcSeAq5IY6N74uXfsFQ6LM8r36xuinm9OHQpf5DawndNVM-h_ZLl&usqp=CAU",
                 "facts": [
                     {
                         "name": "Release ID",
