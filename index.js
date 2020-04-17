@@ -28,6 +28,7 @@ exports.receiveMessage = (req, res) => {
 
     });
 
+    //TODO need to send to teams without the cat this time
     catRequest.on('error', e => console.log(e));
 
     catRequest.end();
