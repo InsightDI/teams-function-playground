@@ -1,8 +1,8 @@
 /**
  * Responds to any HTTP request.
  *
- * @param {!express:Request} req HTTP request context.
- * @param {!express:Response} res HTTP response context.
+ * @param express:Request req HTTP request context.
+ * @param express:Response res HTTP response context.
  */
 
 const https = require('https');
@@ -33,9 +33,8 @@ exports.receiveMessage = (req, res) => {
     catRequest.end();
 };
 
-const postToTeams = (body, res) => {
-    const data = JSON.stringify(
-        {
+const formatDataForTeams = body => {
+    return JSON.stringify({
             "@type": "MessageCard",
             "@context": "http:\/\/schema.org\/extensions",
             "themeColor": "99334",
@@ -66,8 +65,11 @@ const postToTeams = (body, res) => {
                 }
             }]
         });
+};
 
-    console.log(data);
+const postToTeams = (body, res) => {
+
+    const data = formatDataForTeams(body);
 
     const options = {
         hostname: 'outlook.office.com',
@@ -92,4 +94,4 @@ const postToTeams = (body, res) => {
 
     requestToTeams.write(data);
     requestToTeams.end();
-}
+};
