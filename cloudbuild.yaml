@@ -19,5 +19,5 @@ steps:
 - name: 'gcr.io/cloud-builders/npm'
   args: ['install']
 - name: gcr.io/cloud-builders/gcloud
-  args: ['functions', 'deploy', 'code-cleanup-dev', '--region=us-central1', '--allow-unauthenticated', '--runtime=nodejs10', '--trigger-http', '--entry-point=receiveMessage']
+  args: ['functions', 'deploy', 'AppCenter_to_Teams_Webhook_dev', '--region=us-central1', '--allow-unauthenticated', '--runtime=nodejs10', '--trigger-http', '--entry-point=receiveMessage']
 
