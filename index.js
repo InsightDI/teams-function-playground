@@ -49,7 +49,7 @@ const formatDataForTeams = body => {
                         "value": body.release_id
                     }, {
                         "name": "Version",
-                        "value": body.version
+                        "value": `${body.short_version} (${body.version})`
                     }, {
                         "name": "Release Notes",
                         "value": body.release_notes

@@ -1,3 +1,4 @@
 /node_modules/
 /.idea/
 /teams-test.iml
+!/package-lock.json
