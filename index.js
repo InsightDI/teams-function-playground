@@ -44,7 +44,7 @@ const formatDataForTeams = body => {
             "sections": [{
                 "activityTitle": `A new version of ${body.app_name} has been released`,
                 "activitySubtitle": body.platform,
-                "activityImage": "https:\/\/encrypted-tbn0.gstatic.com\/images?q=tbn%3AANd9GcSeAq5IY6N74uXfsFQ6LM8r36xuinm9OHQpf5DawndNVM-h_ZLl&usqp=CAU",
+                "activityImage": "https://storage.googleapis.com/teams_webhook/a-cat.gif?rand=${body.sent_at}",
                 "facts": [
                     {
                         "name": "Release ID",
@@ -63,15 +63,7 @@ const formatDataForTeams = body => {
                         "value": `[Download](${body.install_link})`
                     }],
                 "markdown": true
-            }, {
-                "images":
-                    [
-                        { "image": `https://storage.googleapis.com/teams_webhook/a-cat.gif?rand=${body.sent_at}`,
-                            "title": "Success Kitty is happy"
-                        }
-                    ]
-            }
-            ]
+            }]
         });
 };
 
