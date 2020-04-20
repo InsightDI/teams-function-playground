@@ -12,7 +12,7 @@ const bucketName = 'teams_webhook';
 exports.receiveMessage = (req, res) => {
     const storage = new Storage();
     const bucket = storage.bucket(bucketName);
-    const file = bucket.file('a-cat.gif');
+    const file = bucket.file(process.env._CAT_FILE_NAME);
 
     const options = {
         hostname: 'cataas.com',
@@ -44,7 +44,7 @@ const formatDataForTeams = body => {
             "sections": [{
                 "activityTitle": `A new version of ${body.app_name} has been released`,
                 "activitySubtitle": body.platform,
-                "activityImage": `https://storage.googleapis.com/teams_webhook/a-cat.gif?rand=${body.sent_at}`,
+                "activityImage": `https://storage.googleapis.com/${process.env._BUCKET_O_CATS}/${process.env._CAT_FILE_NAME}?rand=${body.sent_at}`,
                 "facts": [
                     {
                         "name": "Release ID",
@@ -72,9 +72,9 @@ const postToTeams = (body, res) => {
     const data = formatDataForTeams(body);
 
     const options = {
-        hostname: 'outlook.office.com',
-        port: 443,
-        path: '/webhook/dc105689-2d24-49a0-ab6e-0047c98dcb69@6c637512-c417-4e78-9d62-b61258e4b619/IncomingWebhook/03c1279f3fb4400b8f4c52e2d02c3264/2463e5cf-4111-453d-8f7d-099a35bb61dd',
+        hostname: process.env._OUTGOING_HOST,
+        port: process.env._OUTGOING_PORT,
+        path: process.env._OUTGOING_PATH,
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
