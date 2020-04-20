@@ -1,8 +1,8 @@
 /**
  * Responds to any HTTP request.
  *
- * @param {!express:Request} req HTTP request context.
- * @param {!express:Response} res HTTP response context.
+ * @param express:Request req HTTP request context.
+ * @param express:Response res HTTP response context.
  */
 
 const https = require('https');
@@ -28,14 +28,15 @@ exports.receiveMessage = (req, res) => {
 
     });
 
+    //some dumb change
+    //TODO need to send to teams without the cat this time
     catRequest.on('error', e => console.log(e));
 
     catRequest.end();
 };
 
-const postToTeams = (body, res) => {
-    const data = JSON.stringify(
-        {
+const formatDataForTeams = body => {
+    return JSON.stringify({
             "@type": "MessageCard",
             "@context": "http:\/\/schema.org\/extensions",
             "themeColor": "99334",
@@ -43,14 +44,14 @@ const postToTeams = (body, res) => {
             "sections": [{
                 "activityTitle": `A new version of ${body.app_name} has been released`,
                 "activitySubtitle": body.platform,
-                "activityImage": "https:\/\/encrypted-tbn0.gstatic.com\/images?q=tbn%3AANd9GcSeAq5IY6N74uXfsFQ6LM8r36xuinm9OHQpf5DawndNVM-h_ZLl&usqp=CAU",
+                "activityImage": `https://storage.googleapis.com/teams_webhook/a-cat.gif?rand=${body.sent_at}`,
                 "facts": [
                     {
                         "name": "Release ID",
                         "value": body.release_id
                     }, {
                         "name": "Version",
-                        "value": body.version
+                        "value": `${body.short_version} (${body.version})`
                     }, {
                         "name": "Release Notes",
                         "value": body.release_notes
@@ -62,23 +63,18 @@ const postToTeams = (body, res) => {
                         "value": `[Download](${body.install_link})`
                     }],
                 "markdown": true
-            }, {
-                "images":
-                    [
-                        { "image": `https://storage.googleapis.com/teams_webhook/a-cat.gif?rand=${body.sent_at}`,
-                            "title": "Success Kitty is happy"
-                        }
-                    ]
-            }
-            ]
+            }]
         });
+};
 
-    console.log(data);
+const postToTeams = (body, res) => {
+
+    const data = formatDataForTeams(body);
 
     const options = {
         hostname: 'outlook.office.com',
         port: 443,
-        path: '/webhook/3f42eefe-009f-4df6-8488-391f40011ee1@6c637512-c417-4e78-9d62-b61258e4b619/IncomingWebhook/89e5b17135ca42318a9a3f35c8308f66/2463e5cf-4111-453d-8f7d-099a35bb61dd',
+        path: '/webhook/dc105689-2d24-49a0-ab6e-0047c98dcb69@6c637512-c417-4e78-9d62-b61258e4b619/IncomingWebhook/03c1279f3fb4400b8f4c52e2d02c3264/2463e5cf-4111-453d-8f7d-099a35bb61dd',
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -98,4 +94,4 @@ const postToTeams = (body, res) => {
 
     requestToTeams.write(data);
     requestToTeams.end();
-}
+};
