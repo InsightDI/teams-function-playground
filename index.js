@@ -61,15 +61,49 @@ const formatDataForTeams = body => {
                     }, {
                         "name": "Install Link",
                         "value": `[Download](${body.install_link})`
+                    }, {
+                        "name": "Release to Group",
+                        "value": `[Download](${lookupGroupName(body.distribution_group_id)})`
                     }],
                 "markdown": true
             }]
         });
 };
 
+
+const lookupGroupName = (groupId) => {
+
+    // owner name = itunes-uwoq-03
+    // Android-VIP-Mobility - (body.app-name}? or {body.app-display-name}?
+    // x-api-token
+
+    const options = {
+        hostname: 'openapi.appcenter.ms/#/account/users_get',
+        port: 443,
+        path: '/v0.1/user',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': data.length,
+            'X-API-Token': '0cfb50df21f02f9b88405204c413a3ea26cde5fd'
+        }
+    };
+
+    const requestToAppCenter = https.request(options, responseFromAppCenter => {
+        responseFromAppCenter.on('error', console.log);
+        res.status(responseFromAppCenter.statusCode).send(body.build_link);
+    });
+
+    requestToAppCenter.on('success', e => {
+        console.log(e);
+    });
+
+};
+
 const postToTeams = (body, res) => {
 
     const data = formatDataForTeams(body);
+    console.log((data));
 
     const options = {
         hostname: 'outlook.office.com',
@@ -91,6 +125,8 @@ const postToTeams = (body, res) => {
         console.log(e);
         res.status(500).send("Error hitting teams")
     });
+
+
 
     requestToTeams.write(data);
     requestToTeams.end();
