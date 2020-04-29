@@ -14,10 +14,6 @@ exports.receiveMessage = (req, res) => {
   const bucket = storage.bucket(bucketName)
   const file = bucket.file(process.env._CAT_FILE_NAME)
 
-  console.log('------Start dumping env vars------');
-  console.log(process.env);
-  console.log('------Done dumping env vars------');
-
   const options = {
     hostname: 'cataas.com',
     port: 443,
@@ -85,8 +81,6 @@ function getGroupName (groupId) {
     }
   }
 
-  console.log('----------- get group request')
-  console.log(options)
 
   return new Promise((resolve, reject) => https.get(options, (res => {
     let groupName
