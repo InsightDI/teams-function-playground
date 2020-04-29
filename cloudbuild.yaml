@@ -21,7 +21,7 @@ steps:
   - name: gcr.io/cloud-builders/gcloud
     args: ['functions', 'deploy', 'AppCenter_to_Teams_Webhook$BRANCH_NAME', '--region=us-central1', '--allow-unauthenticated', '--runtime=nodejs10', '--trigger-http', '--entry-point=receiveMessage', '--set-env-vars=_CAT_FILE_NAME=${_CAT_FILE_NAME}, _BUCKET_O_CATS=${_BUCKET_O_CATS}, _OUTGOING_HOST=${_OUTGOING_HOST}, _OUTGOING_PATH=${_OUTGOING_PATH}, _OUTGOING_PORT=${_OUTGOING_PORT}, _TEAMS_OWNER_NAME=${_TEAMS_OWNER_NAME}, _TEAMS_API_TOKEN=${_TEAMS_API_TOKEN}, _TEAMS_APP_NAME=${_TEAMS_APP_NAME} ']
   - name: gcr.io/cloud-builders/gcloud
-    args: ['functions', 'add-iam-policy-binding', 'AppCenter_to_Teams_Webhook', '--member=allUsers', '--role=roles/cloudfunctions.invoker']
+    args: ['functions', 'add-iam-policy-binding', 'AppCenter_to_Teams_Webhook$BRANCH_NAME', '--member=allUsers', '--role=roles/cloudfunctions.invoker']
 
 
 # cloud-build-local --config=cloudbuild.yaml --substitutions=_FUNCTION_NAME_SUFFIX=code-cleanup,_CAT_FILE_NAME=a-cat.gif,_BUCKET_O_CATS=teams_webhook,_OUTGOING_HOST=outlook.office.com,_OUTGOING_PATH=/webhook/dc105689-2d24-49a0-ab6e-0047c98dcb69@6c637512-c417-4e78-9d62-b61258e4b619/IncomingWebhook/03c1279f3fb4400b8f4c52e2d02c3264/2463e5cf-4111-453d-8f7d-099a35bb61dd,_OUTGOING_PORT=443 --dryrun=true .
