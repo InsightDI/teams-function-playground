@@ -19,7 +19,7 @@ steps:
   - name: 'gcr.io/cloud-builders/npm'
     args: ['install']
   - name: gcr.io/cloud-builders/gcloud
-    args: ['functions', 'deploy', 'AppCenter_to_Teams_Webhook$BRANCH_NAME', '--region=us-central1', '--allow-unauthenticated', '--runtime=nodejs10', '--trigger-http', '--entry-point=receiveMessage', '--set-env-vars=_CAT_FILE_NAME=${_CAT_FILE_NAME},_BUCKET_O_CATS=${_BUCKET_O_CATS},_OUTGOING_HOST=${_OUTGOING_HOST},_OUTGOING_PATH=${_OUTGOING_PATH},_OUTGOING_PORT=${_OUTGOING_PORT},_TEAMS_OWNER_NAME=${_TEAMS_OWNER_NAME},_TEAMS_API_TOKEN=${_TEAMS_API_TOKEN},TEAMS_APP_NAME=${_TEAMS_APP_NAME}']
+    args: ['functions', 'deploy', 'AppCenter_to_Teams_Webhook$BRANCH_NAME', '--region=us-central1', '--allow-unauthenticated', '--runtime=nodejs10', '--trigger-http', '--entry-point=receiveMessage', '--set-env-vars=_CAT_FILE_NAME=${_CAT_FILE_NAME},_BUCKET_O_CATS=${_BUCKET_O_CATS},_OUTGOING_HOST=${_OUTGOING_HOST},_OUTGOING_PATH=${_OUTGOING_PATH},_OUTGOING_PORT=${_OUTGOING_PORT},_TEAMS_OWNER_NAME=${_TEAMS_OWNER_NAME},_TEAMS_API_TOKEN=${_TEAMS_API_TOKEN},_TEAMS_APP_NAME=${_TEAMS_APP_NAME}']
   - name: gcr.io/cloud-builders/gcloud
     args: ['functions', 'add-iam-policy-binding', 'AppCenter_to_Teams_Webhook$BRANCH_NAME', '--member=allUsers', '--role=roles/cloudfunctions.invoker']
 
