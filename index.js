@@ -85,6 +85,9 @@ function getGroupName (groupId) {
     }
   }
 
+  console.log('----------- get group request')
+  console.log(options)
+
   return new Promise((resolve, reject) => https.get(options, (res => {
     let groupName
 
